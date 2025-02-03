@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+  <title>NexusBrasil Loja</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>
+      <span style="color: #A1C8FF;">Nexus</span>
+      <span style="color: white;">Brasil</span>
+    </h1>
+  </header>
+
+  <main>
+    <!-- Informações do Jogador -->
+    <section class="player-info">
+      <h2>Informações do Jogador</h2>
+      <form id="player-form">
+        <label for="player-name">Seu nome no jogo:</label>
+        <div class="input-container">
+          <input 
+            type="text" 
+            id="player-name" 
+            name="player-name" 
+            placeholder="Seu nome no servidor (se for Bedrock, use NX_ antes do nome)" 
+            required
+          >
+        </div>
+        <button type="button" class="btn" onclick="savePlayerInfo()">Salvar</button>
+      </form>
+      <p id="player-summary"></p>
+      <p class="platform-warning">Se você for jogador <strong>Bedrock</strong>, inclua "NX_" no início do seu nome. (caso nao colocar o nome nao recebera)</p>
+    </section>
+
+    <!-- Loja -->
+    <section class="shop">
+      
+      <!-- VIPs -->
+      <div class="item">
+        <img src="assets/vip.png" alt="VIP" class="vip-image">
+        <h3>VIP</h3>
+        <p>R$ 5,00</p>
+        <button onclick="finalizePurchase('VIP')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-zumbi.png" alt="VIP zumbi" class="vip-image">
+        <h3>VIP zumbi</h3>
+        <p>R$ 15,00</p>
+        <button onclick="finalizePurchase('VIP Zumbi')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-ouro.png" alt="VIP Ouro" class="vip-image">
+        <h3>VIP Ouro</h3>
+        <p>R$ 50,00</p>
+        <button onclick="finalizePurchase('VIP Ouro')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-platina.png" alt="VIP Platina" class="vip-image">
+        <h3>VIP Platina</h3>
+        <p>R$ 75,00</p>
+        <button onclick="finalizePurchase('VIP Platina')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-diamante.png" alt="VIP Diamante" class="vip-image">
+        <h3>VIP Diamante</h3>
+        <p>R$ 100,00</p>
+        <button onclick="finalizePurchase('VIP Diamante')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-esmeralda.png" alt="VIP Esmeralda" class="vip-image">
+        <h3>VIP Esmeralda</h3>
+        <p>R$ 150,00</p>
+        <button onclick="finalizePurchase('VIP Esmeralda')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-ruby.png" alt="VIP Ruby" class="vip-image">
+        <h3>VIP Ruby</h3>
+        <p>R$ 200,00</p>
+        <button onclick="finalizePurchase('VIP Ruby')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-safira.png" alt="VIP Safira" class="vip-image">
+        <h3>VIP Safira</h3>
+        <p>R$ 250,00</p>
+        <button onclick="finalizePurchase('VIP Safira')">Comprar</button>
+      </div>
+
+      <div class="item">
+        <img src="assets/vip-ultimate.png" alt="VIP Ultimate" class="vip-image">
+        <h3>VIP Ultimate</h3>
+        <p>R$ 500,00</p>
+        <button onclick="finalizePurchase('VIP Ultimate')">Comprar</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal para exibir QR Code -->
+  <div id="pix-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal">&times;</span>
+      <h2>Finalize sua Compra</h2>
+      <p>Escaneie o QR Code abaixo para realizar o pagamento:</p>
+      <div id="qr-code"></div>
+      <p id="pix-key"></p> <!-- Aqui será exibida a chave Pix -->
+      <p class="pix-message">Seus benefícios VIP serão liberados em até 1 dia.</p>
+      <div class="pix-rain"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Configuração dos QR Codes e Chaves Pix para cada VIP
+    const vipDetails = {
+      'VIP': { qrCode: 'assets/pix-vip.png', pixKey: '00020126580014br.gov.bcb.pix013623d55962-2c7c-4813-aa31-280d0e07a2c352040000530398654045.005802BR5916Cleonice Queiroz6008Brasilia620905057pkir6304CC53' },
+      'VIP Zumbi': { qrCode: 'assets/pix2.png', pixKey: '00020126580014br.gov.bcb.pix013623d55962-2c7c-4813-aa31-280d0e07a2c3520400005303986540515.005802BR5916Cleonice Queiroz6008Brasilia62090505ampwu6304CC1A' },
+      'VIP Ouro': { qrCode: 'assets/pix-ouro.png', pixKey: 'sua-chave-pix-ouro' },
+      'VIP Platina': { qrCode: 'assets/pix-platina.png', pixKey: 'sua-chave-pix-platina' },
+      'VIP Diamante': { qrCode: 'assets/pix-diamante.png', pixKey: 'sua-chave-pix-diamante' },
+      'VIP Esmeralda': { qrCode: 'assets/pix-esmeralda.png', pixKey: 'sua-chave-pix-esmeralda' },
+      'VIP Ruby': { qrCode: 'assets/pix-ruby.png', pixKey: 'sua-chave-pix-ruby' },
+      'VIP Safira': { qrCode: 'assets/pix-safira.png', pixKey: 'sua-chave-pix-safira' },
+      'VIP Ultimate': { qrCode: 'assets/pix-ultimate.png', pixKey: 'sua-chave-pix-ultimate' }
+    };
+
+  
+    // Função para exibir QR Code e chave Pix
+    function finalizePurchase(vipName) {
+      // Obter detalhes do VIP selecionado
+      const vip = vipDetails[vipName];
+      if (!vip) {
+        alert('Detalhes do VIP não encontrados!');
+        return;
+      }
+
+      // Exibe o modal
+      document.getElementById('pix-modal').style.display = 'block';
+
+      // Exibe o QR Code
+      const qrCodeElement = document.createElement('img');
+      qrCodeElement.src = vip.qrCode; // Caminho da imagem do QR Code
+      qrCodeElement.alt = `QR Code para ${vipName}`;
+      document.getElementById("qr-code").innerHTML = ''; // Limpa o conteúdo anterior
+      document.getElementById("qr-code").appendChild(qrCodeElement); // Adiciona o novo QR Code
+
+      // Exibe a chave Pix abaixo do QR Code
+      document.getElementById("pix-key").textContent = 'Chave Pix: ' + vip.pixKey;
+    }
+
+    // Fechar o modal
+    document.getElementById("close-modal").onclick = function () {
+      document.getElementById('pix-modal').style.display = 'none';
+    };
+  </script>
+
+  <!-- Link para o Discord -->
+  <section class="discord-link">
+    <a href="https://discord.gg/MAc69vu6AM" target="_blank" class="btn discord-btn">Entrar no Discord</a>
+  </section>
+
+  <video id="background-video" autoplay loop muted>
+    <source src="assets/video.mp4" type="video/mp4">
+    Seu navegador não suporta a tag de vídeo.
+  </video>
+
+  <!-- Botão para ativar/desativar o áudio -->
+  <button id="audio-toggle-btn" onclick="toggleAudio()">Ativar Áudio</button>
+
+  <style>
+    #background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    #audio-toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+  </style>
+
+  <script>
+    // Função para ativar/desativar o áudio do vídeo
+    function toggleAudio() {
+      const video = document.getElementById('background-video');
+      const button = document.getElementById('audio-toggle-btn');
+      
+      if (video.muted) {
+        video.muted = false;
+        button.textContent = 'Desativar Áudio'; // Atualiza o texto do botão
+      } else {
+        video.muted = true;
+        button.textContent = 'Ativar Áudio'; // Atualiza o texto do botão
+      }
+    }
+  </script>
+</body>
+</html>
